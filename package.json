@@ -2,17 +2,24 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "server": "node-env-run server/server.js --exec nodemon | pino-colada",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject"
   },
   "dependencies": {
+    "@types/react-native-dotenv": "^0.2.0",
+    "axios": "^0.21.0",
+    "babel-plugin-inline-dotenv": "^1.6.0",
     "expo": "~40.0.0",
+    "expo-sms": "^8.4.0",
+    "expo-splash-screen": "~0.8.1",
     "expo-status-bar": "~1.0.3",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+    "react-native-progress": "^4.1.2",
     "react-native-web": "~0.13.12"
   },
   "devDependencies": {
@@ -20,6 +27,13 @@
     "@types/react": "~16.9.35",
     "@types/react-dom": "~16.9.8",
     "@types/react-native": "~0.63.2",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-pino-logger": "^5.0.0",
+    "node-env-run": "^4.0.2",
+    "nodemon": "^2.0.6",
+    "pino-colada": "^2.1.0",
+    "twilio": "^3.54.1",
     "typescript": "~4.0.0"
   },
   "private": true
