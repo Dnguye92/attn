@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Bar } from "react-native-progress";
-import { StyleSheet, Text, View, Button, Alert, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 import { MESSAGE_ATTN, MESSAGE_FOOD, STATUS_FAILED, STATUS_PENDING, STATUS_SUCCESS } from "./constants";
-
-const { GIB_API_HOST_URL } = process.env;
 
 export default function App() {
   const [attentionStatus, setAttentionStatus] = useState("");
@@ -12,10 +10,7 @@ export default function App() {
   const [foodStatus, setFoodStatus] = useState("");
   const [foodProgress, setFoodProgress] = useState(0.0);
   const [error, setError] = useState(false);
-  const [message, setMessage] = useState({
-    to: undefined,
-    body: "",
-  });
+
   const requestAttention = async () => {
     setAttentionProgress(0.0);
     setAttentionStatus(STATUS_PENDING);
@@ -37,15 +32,13 @@ export default function App() {
       if (data.success) {
         setAttentionProgress(1.0);
         setAttentionStatus(STATUS_SUCCESS);
-        setMessage({
-          to: undefined,
-          body: "",
-        });
       } else {
         setError(true);
       }
     })
     .catch(err => {
+      setAttentionStatus(STATUS_FAILED);
+      setAttentionProgress(0.1);
       throw err;
     });
   };
@@ -71,15 +64,13 @@ export default function App() {
       if (data.success) {
         setFoodProgress(1.0);
         setFoodStatus(STATUS_SUCCESS);
-        setMessage({
-          to: undefined,
-          body: "",
-        });
       } else {
         setError(true);
       }
     })
     .catch(err => {
+      setFoodProgress(0.1);
+      setFoodStatus(STATUS_FAILED);
       throw err;
     });
   };
