@@ -4,7 +4,7 @@
     "slug": "attn",
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/peach-logo.png",
+    "icon": "./assets/app-icon.jpg",
     "splash": {
       "image": "./assets/peach-logo.png",
       "resizeMode": "contain",
