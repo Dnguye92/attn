@@ -2,9 +2,9 @@
   "expo": {
     "name": "attn",
     "slug": "attn",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/peach-logo.png",
     "splash": {
       "image": "./assets/peach-logo.png",
       "resizeMode": "contain",
@@ -17,11 +17,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "host.exp.attn"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/peach-logo.png",
         "backgroundColor": "#FFFFFF"
       }
     },
