@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bar } from "react-native-progress";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 
-import { MESSAGE_ATTN, MESSAGE_FOOD, STATUS_FAILED, STATUS_PENDING, STATUS_SUCCESS } from "./constants";
+import { MESSAGE_ATTN, MESSAGE_FOOD, STATUS_FAILED, STATUS_PENDING, STATUS_SUCCESS, TICKS } from "./constants";
 
 export default function App() {
   const [attentionStatus, setAttentionStatus] = useState("");
   const [attentionProgress, setAttentionProgress] = useState(0.0);
   const [foodStatus, setFoodStatus] = useState("");
   const [foodProgress, setFoodProgress] = useState(0.0);
+  const [tickStatus, setTickStatus] = useState("");
+  const [tickProgress, setTickProgress] = useState(0.0);
+  const [randomNumber, setRandomNumber] = useState(0);
   const [error, setError] = useState(false);
+  const randomTick = TICKS[Math.floor(Math.random() * TICKS.length)];
 
   const requestAttention = async () => {
-    setAttentionProgress(0.0);
+    setAttentionProgress(0.5);
     setAttentionStatus(STATUS_PENDING);
-    fetch(`https://attn.herokuapp.com/api/gib/attention`, {
+    fetch(`https://attn.herokuapp.com/api/gib/message`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +29,6 @@ export default function App() {
       })
     })
     .then(res => {
-      setAttentionProgress(0.5);
       return res.json()
     })
     .then(data => {
@@ -44,9 +47,9 @@ export default function App() {
   };
 
   const requestFood = async () => {
-    setFoodProgress(0.0);
+    setFoodProgress(0.5);
     setFoodStatus(STATUS_PENDING);
-    fetch(`https://attn.herokuapp.com/api/gib/food`, {
+    fetch(`https://attn.herokuapp.com/api/gib/message`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +60,6 @@ export default function App() {
       })
     })
     .then(res => {
-      setFoodProgress(0.5);
       return res.json()
     })
     .then(data => {
@@ -75,8 +77,44 @@ export default function App() {
     });
   };
 
+  const sendTick = async () => {
+    setTickProgress(0.5);
+    setTickStatus(STATUS_PENDING);
+    fetch(`https://attn.herokuapp.com/api/gib/message`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: 5109094568,
+        body: randomTick,
+      })
+    })
+    .then(res => {
+      return res.json()
+    })
+    .then(data => {
+      if (data.success) {
+        setTickProgress(1.0);
+        setTickStatus(STATUS_SUCCESS);
+      } else {
+        setError(true);
+      }
+    })
+    .catch(err => {
+      setTickProgress(0.1);
+      setTickStatus(STATUS_FAILED);
+      throw err;
+    });
+  }
+
+  useEffect(() => {
+    setRandomNumber(Math.floor(Math.random() * TICKS.length));
+  }, [randomNumber]);
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.container}>
       <Text style={styles.heading}>PEACHY NEED ATTN NOW 🍑</Text>
       <Image
         style={styles.image}      
@@ -114,7 +152,26 @@ export default function App() {
         color={"rgb(255,218,185)"}
       />
       <Text>{foodStatus}</Text>
-    </View>
+      <Image
+        style={styles.image}      
+        source={require("./assets/90DF.gif")}
+        resizeMode="cover"
+      />
+      <TouchableOpacity
+        onPress={sendTick}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Send a tick</Text>
+      </TouchableOpacity>
+      <Bar
+        progress={tickProgress}
+        width={300}
+        height={10}
+        color={"rgb(255,218,185)"}
+      />
+      <Text>{tickStatus}</Text>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -125,11 +182,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: "scroll",
   },
   image: {
     height: 200,
     width: 350,
-    marginTop: 24,
   },
   heading: {
     fontSize: 25,
@@ -146,6 +203,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: "bold",
+  },
+  scrollView: {
+    marginTop: 48,
   }
 });
 
